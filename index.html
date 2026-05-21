@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>品牌部落格</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FAFAF8;
+  --surface:#FFFFFF;
+  --text:#1A1A18;
+  --muted:#6B6B66;
+  --accent:#1D9E75;
+  --accent-light:#E1F5EE;
+  --border:#E8E6E0;
+  --tag-bg:#F1EFE8;
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Noto Serif TC',serif;font-size:1.25rem;font-weight:600;letter-spacing:0.05em}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2rem;font-size:0.875rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.admin-btn{background:var(--text);color:var(--bg)!important;padding:0.5rem 1.25rem;border-radius:100px;font-size:0.8rem;font-weight:500;transition:opacity 0.2s}
+.admin-btn:hover{opacity:0.8}
+
+/* HERO */
+.hero{max-width:1100px;margin:0 auto;padding:5rem 2rem 3rem}
+.hero-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:1rem}
+.hero-title{font-family:'Noto Serif TC',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:600;line-height:1.2;margin-bottom:1.5rem}
+.hero-desc{color:var(--muted);font-size:1rem;line-height:1.8;max-width:520px}
+
+/* SEARCH & FILTER */
+.controls{max-width:1100px;margin:0 auto;padding:0 2rem 2.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.search-box{flex:1;min-width:200px;position:relative}
+.search-box input{width:100%;padding:0.65rem 1rem 0.65rem 2.5rem;border:1px solid var(--border);border-radius:100px;background:var(--surface);font-family:'Noto Sans TC',sans-serif;font-size:0.875rem;color:var(--text);outline:none;transition:border 0.2s}
+.search-box input:focus{border-color:var(--accent)}
+.search-box svg{position:absolute;left:0.875rem;top:50%;transform:translateY(-50%);color:var(--muted)}
+.tags{display:flex;gap:0.5rem;flex-wrap:wrap}
+.tag{padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.2s;color:var(--muted);font-family:'Noto Sans TC',sans-serif}
+.tag:hover,.tag.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+/* GRID */
+.grid{max-width:1100px;margin:0 auto;padding:0 2rem 5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+.card-img{width:100%;height:200px;object-fit:cover;display:block;background:var(--tag-bg)}
+.card-img-placeholder{width:100%;height:200px;background:linear-gradient(135deg,#E1F5EE 0%,#9FE1CB 100%);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--accent)}
+.card-body{padding:1.5rem}
+.card-tags{display:flex;gap:0.5rem;margin-bottom:0.875rem;flex-wrap:wrap}
+.card-tag{font-size:0.7rem;padding:0.25rem 0.75rem;border-radius:100px;background:var(--accent-light);color:var(--accent);font-weight:500}
+.card-title{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:600;line-height:1.5;margin-bottom:0.75rem}
+.card-excerpt{font-size:0.875rem;color:var(--muted);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:var(--muted)}
+.read-more{color:var(--accent);font-weight:500;display:flex;align-items:center;gap:0.25rem}
+.read-more svg{transition:transform 0.2s}
+.card:hover .read-more svg{transform:translateX(4px)}
+
+/* EMPTY */
+.empty{max-width:1100px;margin:0 auto;padding:4rem 2rem;text-align:center;color:var(--muted)}
+.empty svg{margin-bottom:1rem;opacity:0.3}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-size:0.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">品牌<span>·</span>部落格</a>
+    <div class="nav-links">
+      <a href="index.html">首頁</a>
+      <a href="admin.html" class="admin-btn">後台管理</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Brand Blog</div>
+  <h1 class="hero-title">品牌故事與<br>產品資訊</h1>
+  <p class="hero-desc">分享我們的產品理念、使用心得與品牌故事，讓你更了解我們。</p>
+</section>
+
+<div class="controls">
+  <div class="search-box">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="搜尋文章...">
+  </div>
+  <div class="tags" id="tagFilter">
+    <button class="tag active" data-tag="all">全部</button>
+  </div>
+</div>
+
+<div class="grid" id="articleGrid"></div>
+<div class="empty" id="emptyState" style="display:none">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  <p>找不到相關文章</p>
+</div>
+
+<footer>© 2025 品牌部落格 · 由 Feather 技術驅動</footer>
+
+<script>
+let articles = [];
+let activeTag = 'all';
+
+async function loadArticles() {
+  try {
+    const res = await fetch('articles.json');
+    articles = await res.json();
+  } catch {
+    articles = [];
+  }
+  buildTagFilter();
+  renderArticles();
+}
+
+function buildTagFilter() {
+  const allTags = [...new Set(articles.flatMap(a => a.tags || []))];
+  const container = document.getElementById('tagFilter');
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag';
+    btn.dataset.tag = tag;
+    btn.textContent = tag;
+    container.appendChild(btn);
+  });
+  container.querySelectorAll('.tag').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTag = btn.dataset.tag;
+      container.querySelectorAll('.tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderArticles();
+    });
+  });
+}
+
+function renderArticles() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const published = articles.filter(a => a.status === 'published');
+  const filtered = published.filter(a => {
+    const matchTag = activeTag === 'all' || (a.tags || []).includes(activeTag);
+    const matchQ = !q || a.title.toLowerCase().includes(q) || (a.excerpt || '').toLowerCase().includes(q);
+    return matchTag && matchQ;
+  });
+
+  const grid = document.getElementById('articleGrid');
+  const empty = document.getElementById('emptyState');
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(article => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => location.href = `article.html?id=${article.id}`;
+    const imgHtml = article.cover
+      ? `<img class="card-img" src="${article.cover}" alt="${article.title}">`
+      : `<div class="card-img-placeholder">✦</div>`;
+    const tagsHtml = (article.tags||[]).map(t=>`<span class="card-tag">${t}</span>`).join('');
+    card.innerHTML = `
+      ${imgHtml}
+      <div class="card-body">
+        <div class="card-tags">${tagsHtml}</div>
+        <h2 class="card-title">${article.title}</h2>
+        <p class="card-excerpt">${article.excerpt || ''}</p>
+      </div>
+      <div class="card-footer">
+        <span>${article.date || ''}</span>
+        <span class="read-more">閱讀更多 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', renderArticles);
+loadArticles();
+</script>
+</body>
+</html>

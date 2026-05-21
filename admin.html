@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#F5F4F0;--surface:#FFFFFF;--text:#1A1A18;--muted:#6B6B66;--accent:#1D9E75;--accent-light:#E1F5EE;--border:#E8E6E0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+nav{background:var(--text);color:#fff;position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:600}
+.logo span{color:#9FE1CB}
+.nav-right{display:flex;gap:1rem;align-items:center;font-size:0.85rem;color:#9FE1CB}
+.nav-right span{cursor:pointer}
+.nav-right span:hover{opacity:0.8}
+
+.layout{max-width:1200px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 350px;gap:1.5rem}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.panel-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.panel-title{font-size:0.875rem;font-weight:500}
+.btn{padding:0.5rem 1.25rem;border-radius:100px;font-size:0.8rem;font-weight:500;cursor:pointer;border:none;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{opacity:0.85}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed}
+.btn-ghost{background:0;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--text)}
+
+.article-list{padding:0.5rem}
+.article-item{padding:1rem;border-radius:10px;cursor:pointer;transition:background 0.15s;margin-bottom:0.25rem;display:flex;justify-content:space-between;align-items:flex-start}
+.article-item:hover{background:var(--bg)}
+.article-item.active{background:var(--accent-light)}
+.article-item-info{flex:1}
+.article-item-title{font-size:0.9rem;font-weight:500;margin-bottom:0.25rem}
+.article-item-meta{font-size:0.75rem;color:var(--muted)}
+.article-item-actions{display:flex;gap:0.5rem}
+.icon-btn{width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;background:var(--bg)}
+.icon-btn:hover{background:var(--accent-light)}
+.status{display:inline-block;padding:0.15rem 0.6rem;border-radius:100px;font-size:0.7rem;font-weight:500;margin-left:0.5rem;background:#EAF3DE;color:#3B6D11}
+.status.draft{background:#f5f5f5;color:var(--muted)}
+
+.form-body{padding:1.5rem}
+.form-row{margin-bottom:1.25rem}
+label{display:block;font-size:0.8rem;font-weight:500;color:var(--muted);margin-bottom:0.5rem}
+input,select,textarea{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:'Noto Sans TC',sans-serif;font-size:0.875rem;color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{resize:vertical;line-height:1.7}
+.form-actions{display:flex;gap:0.75rem}
+
+.login-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.login-modal.hidden{display:none}
+.login-card{background:var(--surface);border-radius:16px;padding:2.5rem;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.login-card h2{font-family:'Noto Serif TC',serif;font-size:1.5rem;margin-bottom:1rem}
+.login-card label{margin-top:1rem;display:block}
+.login-card input{width:100%;padding:0.75rem 1rem;margin-top:0.5rem;border:1px solid var(--border);border-radius:10px;font-family:monospace;font-size:0.85rem}
+.login-card input:focus{outline:none;border-color:var(--accent)}
+.login-actions{display:flex;gap:0.75rem;margin-top:1.5rem}
+.login-actions button{flex:1;padding:0.75rem}
+
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--text);color:#fff;padding:0.75rem 1.25rem;border-radius:100px;font-size:0.85rem;transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:999}
+.toast.show{transform:translateY(0);opacity:1}
+.empty{padding:3rem 1.5rem;text-align:center;color:var(--muted);font-size:0.875rem}
+.spinner{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 0.8s infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">品牌·<span>部落格</span></div>
+    <div class="nav-right">
+      <a href="index.html">查看網站</a>
+      <span onclick="logout()">登出</span>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+  <div>
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">📝 文章</div>
+        <button class="btn btn-primary" onclick="newArticle()">+ 新增</button>
+      </div>
+      <div id="articleList"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title"><span id="editorTitle">新增文章</span></div>
+      <button class="btn btn-ghost" onclick="closeEditor()">×</button>
+    </div>
+    <div class="form-body">
+      <input type="hidden" id="editId">
+      <div class="form-row">
+        <label>標題 *</label>
+        <input type="text" id="editTitle">
+      </div>
+      <div class="form-row">
+        <label>摘要</label>
+        <textarea id="editExcerpt" rows="2"></textarea>
+      </div>
+      <div class="form-row">
+        <label>內容</label>
+        <textarea id="editContent" rows="8"><p>文字</p></textarea>
+      </div>
+      <div class="form-row">
+        <label>標籤</label>
+        <input type="text" id="editTags" placeholder="用逗號分隔">
+      </div>
+      <div class="form-row">
+        <label>日期</label>
+        <input type="date" id="editDate">
+      </div>
+      <div class="form-row">
+        <label>狀態</label>
+        <select id="editStatus">
+          <option value="published">已發布</option>
+          <option value="draft">草稿</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="saveBtn" onclick="saveArticle()" style="flex:1">發布</button>
+        <button class="btn btn-ghost" onclick="closeEditor()">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loginModal" class="login-modal">
+  <div class="login-card">
+    <h2>後台登入</h2>
+    <label>GitHub Token</label>
+    <input type="password" id="tokenInput" placeholder="ghp_..." onkeydown="if(event.key==='Enter')login()">
+    <div class="login-actions">
+      <button class="btn btn-primary" onclick="login()">登入</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let articles = [];
+let editingId = null;
+let token = '';
+const owner = 'mandychen111111-commits';
+const repo = 'brand-blog';
+
+function today(){return new Date().toISOString().split('T')[0]}
+
+function login(){
+  const t = document.getElementById('tokenInput').value.trim();
+  if(!t){showToast('請輸入 Token');return}
+  token = t;
+  document.getElementById('loginModal').classList.add('hidden');
+  loadArticles();
+}
+
+function logout(){
+  if(confirm('確定登出？')){
+    token = '';
+    document.getElementById('loginModal').classList.remove('hidden');
+    document.getElementById('tokenInput').value = '';
+  }
+}
+
+async function loadArticles(){
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
+      headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3.raw'}
+    });
+    if(res.ok) articles = await res.json();
+  } catch(e) {}
+  renderList();
+}
+
+async function saveToGithub(){
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(articles, null, 2))));
+  try {
+    const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
+      headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json'}
+    });
+    
+    if(!getRes.ok) {
+      const err = await getRes.json();
+      throw new Error(err.message || `無法讀取檔案 (${getRes.status})`);
+    }
+    
+    const data = await getRes.json();
+    if(!data.sha) throw new Error('無法取得 SHA');
+
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
+      method: 'PUT',
+      headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
+      body: JSON.stringify({message: '更新文章', content, sha: data.sha})
+    });
+    
+    if(res.ok) {
+      showToast('✓ 已發布');
+      return true;
+    }
+    
+    const errData = await res.json();
+    throw new Error(errData.message || `發布失敗 (${res.status})`);
+  } catch(e) {
+    console.error(e);
+    showToast('✗ ' + e.message);
+    return false;
+  }
+}
+
+function renderList(){
+  const html = articles.length ? articles.map(a=>`
+    <div class="article-item ${editingId===a.id?'active':''}" onclick="editArticle('${a.id}')">
+      <div class="article-item-info">
+        <div class="article-item-title">${a.title||'無標題'}</div>
+        <div class="article-item-meta">${a.date||''} <span class="status ${a.status}">${a.status==='published'?'已發布':'草稿'}</span></div>
+      </div>
+      <div class="article-item-actions">
+        <button class="icon-btn" onclick="event.stopPropagation();editArticle('${a.id}')">✏️</button>
+        <button class="icon-btn" onclick="event.stopPropagation();deleteArticle('${a.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('') : '<div class="empty">新增第一篇文章</div>';
+  document.getElementById('articleList').innerHTML = `<div class="article-list">${html}</div>`;
+}
+
+function newArticle(){
+  editingId = null;
+  document.getElementById('editorTitle').textContent = '新增文章';
+  document.getElementById('editTitle').value = '';
+  document.getElementById('editExcerpt').value = '';
+  document.getElementById('editContent').value = '';
+  document.getElementById('editTags').value = '';
+  document.getElementById('editDate').value = today();
+  document.getElementById('editStatus').value = 'published';
+  renderList();
+}
+
+function editArticle(id){
+  const a = articles.find(x=>x.id===id);
+  if(!a) return;
+  editingId = id;
+  document.getElementById('editorTitle').textContent = '編輯文章';
+  document.getElementById('editTitle').value = a.title||'';
+  document.getElementById('editExcerpt').value = a.excerpt||'';
+  document.getElementById('editContent').value = a.content||'';
+  document.getElementById('editTags').value = (a.tags||[]).join(', ');
+  document.getElementById('editDate').value = a.date||today();
+  document.getElementById('editStatus').value = a.status||'published';
+  renderList();
+}
+
+async function saveArticle(){
+  const title = document.getElementById('editTitle').value.trim();
+  if(!title){showToast('請輸入標題');return}
+  
+  document.getElementById('saveBtn').disabled = true;
+  document.getElementById('saveBtn').innerHTML = '<span class="spinner"></span>';
+
+  const data = {
+    id: editingId || String(Date.now()),
+    title,
+    excerpt: document.getElementById('editExcerpt').value,
+    content: document.getElementById('editContent').value,
+    tags: document.getElementById('editTags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    cover: '',
+    date: document.getElementById('editDate').value,
+    status: document.getElementById('editStatus').value
+  };
+  
+  if(editingId){
+    articles[articles.findIndex(a=>a.id===editingId)] = data;
+  } else {
+    articles.unshift(data);
+  }
+
+  if(await saveToGithub()){
+    editingId = null;
+    renderList();
+  }
+  
+  document.getElementById('saveBtn').disabled = false;
+  document.getElementById('saveBtn').innerHTML = '發布';
+}
+
+async function deleteArticle(id){
+  if(!confirm('確定刪除？')) return;
+  articles = articles.filter(a=>a.id!==id);
+  if(await saveToGithub()) renderList();
+}
+
+function closeEditor(){
+  editingId = null;
+  renderList();
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+renderList();
+</script>
+</body>
+</html>
