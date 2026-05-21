@@ -11,19 +11,18 @@
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100vh}
 a{text-decoration:none;color:inherit}
 
-/* NAV */
 nav{background:var(--text);color:#fff;position:sticky;top:0;z-index:100}
 .nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:600;opacity:0.9}
 .logo span{color:#9FE1CB}
-.nav-right{display:flex;align-items:center;gap:1rem}
-.view-btn{font-size:0.8rem;color:#9FE1CB;display:flex;align-items:center;gap:0.375rem}
+.nav-right{display:flex;align-items:center;gap:1rem;font-size:0.85rem}
+.view-btn{color:#9FE1CB;display:flex;align-items:center;gap:0.375rem}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#9FE1CB;display:inline-block;margin-right:0.5rem}
+.status-dot.error{background:#E24B4A}
 
-/* LAYOUT */
 .layout{max-width:1200px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 380px;gap:1.5rem}
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
 
-/* PANEL */
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
 .panel-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .panel-title{font-size:0.875rem;font-weight:500;display:flex;align-items:center;gap:0.5rem}
@@ -31,12 +30,12 @@ nav{background:var(--text);color:#fff;position:sticky;top:0;z-index:100}
 .btn{padding:0.5rem 1.25rem;border-radius:100px;font-size:0.8rem;font-weight:500;cursor:pointer;border:none;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{opacity:0.85}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed}
 .btn-danger{background:var(--danger-light);color:var(--danger)}
 .btn-danger:hover{background:var(--danger);color:#fff}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
 .btn-ghost:hover{border-color:var(--text);color:var(--text)}
 
-/* ARTICLE LIST */
 .article-list{padding:0.5rem}
 .article-item{padding:1rem;border-radius:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;cursor:pointer;transition:background 0.15s;border:1px solid transparent;margin-bottom:0.25rem}
 .article-item:hover{background:var(--bg)}
@@ -53,28 +52,32 @@ nav{background:var(--text);color:#fff;position:sticky;top:0;z-index:100}
 .status-published{background:#EAF3DE;color:#3B6D11}
 .status-draft{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
 
-/* FORM */
 .form-body{padding:1.5rem}
 .form-row{margin-bottom:1.25rem}
 label{display:block;font-size:0.8rem;font-weight:500;color:var(--muted);margin-bottom:0.5rem}
-input[type=text],input[type=date],select,textarea{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:'Noto Sans TC',sans-serif;font-size:0.875rem;color:var(--text);background:var(--surface);outline:none;transition:border 0.2s}
+input[type=text],input[type=date],input[type=password],select,textarea{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:'Noto Sans TC',sans-serif;font-size:0.875rem;color:var(--text);background:var(--surface);outline:none;transition:border 0.2s}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 textarea{resize:vertical;line-height:1.7}
 .form-actions{display:flex;gap:0.75rem;flex-wrap:wrap;padding-top:0.5rem}
 .toolbar{display:flex;gap:0.5rem;margin-bottom:0.5rem;flex-wrap:wrap}
 .toolbar-btn{padding:0.3rem 0.75rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);font-size:0.8rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s}
 .toolbar-btn:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
-.helper{font-size:0.75rem;color:var(--muted);margin-top:0.375rem}
 
-/* EXPORT */
-.export-section{padding:1.5rem;border-top:1px solid var(--border)}
-.export-title{font-size:0.8rem;font-weight:500;margin-bottom:0.75rem;color:var(--muted)}
-pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;overflow-x:auto;color:var(--text);border:1px solid var(--border);line-height:1.6;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto}
+.setup-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.setup-modal.hidden{display:none}
+.setup-card{background:var(--surface);border-radius:16px;padding:2rem;max-width:420px;width:90%}
+.setup-card h2{font-family:'Noto Serif TC',serif;font-size:1.25rem;margin-bottom:1.5rem;color:var(--text)}
+.setup-card label{display:block;font-size:0.8rem;font-weight:500;color:var(--muted);margin-bottom:0.5rem}
+.setup-card input{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:monospace;font-size:0.8rem;margin-bottom:1rem;outline:none}
+.setup-card input:focus{border-color:var(--accent)}
+.setup-hint{font-size:0.75rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.setup-actions{display:flex;gap:0.75rem}
 
-/* TOAST */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--text);color:#fff;padding:0.75rem 1.25rem;border-radius:100px;font-size:0.85rem;font-weight:500;transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:999}
 .toast.show{transform:translateY(0);opacity:1}
 .empty-msg{padding:3rem 1.5rem;text-align:center;color:var(--muted);font-size:0.875rem}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -83,6 +86,7 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
   <div class="nav-inner">
     <div class="logo">品牌<span>·</span>部落格 <span style="opacity:0.4;margin:0 0.5rem">|</span> 後台管理</div>
     <div class="nav-right">
+      <span id="syncStatus"><span class="status-dot"></span>已連接</span>
       <a href="index.html" class="view-btn">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         查看網站
@@ -92,7 +96,6 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
 </nav>
 
 <div class="layout">
-  <!-- 文章列表 -->
   <div>
     <div class="panel">
       <div class="panel-header">
@@ -101,23 +104,8 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
       </div>
       <div id="articleList"></div>
     </div>
-
-    <div class="panel" style="margin-top:1.5rem">
-      <div class="panel-header">
-        <div class="panel-title"><div class="dot" style="background:#888"></div>匯出 articles.json</div>
-        <button class="btn btn-ghost" onclick="copyJson()">複製 JSON</button>
-      </div>
-      <div class="export-section">
-        <p class="export-title">每次編輯後，複製下方 JSON 貼到你的 articles.json 檔案，再上傳到 GitHub 即可更新網站。</p>
-        <pre id="jsonPreview"></pre>
-        <div style="margin-top:0.75rem;display:flex;gap:0.75rem">
-          <button class="btn btn-primary" onclick="downloadJson()">⬇ 下載 articles.json</button>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- 編輯表單 -->
   <div class="panel" id="editorPanel">
     <div class="panel-header">
       <div class="panel-title"><div class="dot" style="background:#FAC775"></div><span id="editorLabel">新增文章</span></div>
@@ -134,7 +122,7 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
         <textarea id="editExcerpt" rows="2" placeholder="顯示在列表頁的簡短描述"></textarea>
       </div>
       <div class="form-row">
-        <label>文章內容（支援 HTML 標籤）</label>
+        <label>文章內容</label>
         <div class="toolbar">
           <button class="toolbar-btn" onclick="insertTag('h2')">H2 標題</button>
           <button class="toolbar-btn" onclick="insertTag('h3')">H3 標題</button>
@@ -143,16 +131,15 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
           <button class="toolbar-btn" onclick="insertTag('ul-li')">清單</button>
           <button class="toolbar-btn" onclick="insertTag('blockquote')">引用</button>
         </div>
-        <textarea id="editContent" rows="10" placeholder="<p>在這裡輸入文章內容...</p>&#10;<p>支援 HTML，例如 &lt;h2&gt;標題&lt;/h2&gt;</p>"></textarea>
-        <div class="helper">提示：輸入 &lt;p&gt;段落文字&lt;/p&gt; 即可，不需要懂程式</div>
+        <textarea id="editContent" rows="10" placeholder="<p>在這裡輸入文章內容...</p>"></textarea>
       </div>
       <div class="form-row">
         <label>標籤（用逗號分隔）</label>
-        <input type="text" id="editTags" placeholder="例如：產品介紹, 使用心得, 健康知識">
+        <input type="text" id="editTags" placeholder="例如：產品介紹, 使用心得">
       </div>
       <div class="form-row">
         <label>封面圖片網址</label>
-        <input type="text" id="editCover" placeholder="https://...（貼上圖片網址）">
+        <input type="text" id="editCover" placeholder="https://...">
       </div>
       <div class="form-row">
         <label>發布日期</label>
@@ -166,9 +153,24 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
         </select>
       </div>
       <div class="form-actions">
-        <button class="btn btn-primary" onclick="saveArticle()">儲存文章</button>
+        <button class="btn btn-primary" id="saveBtn" onclick="saveArticle()">儲存並發布</button>
         <button class="btn btn-ghost" onclick="closeEditor()">取消</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div id="setupModal" class="setup-modal">
+  <div class="setup-card">
+    <h2>⚙️ 設定 GitHub Token</h2>
+    <label>GitHub Personal Access Token</label>
+    <input type="password" id="tokenInput" placeholder="ghp_...">
+    <div class="setup-hint">
+      從 GitHub Settings → Developer settings → Personal access tokens → Tokens (classic) 建立，只需勾選 <code style="background:#f0f0f0;padding:2px 6px">repo</code> 權限
+    </div>
+    <div class="setup-actions">
+      <button class="btn btn-primary" onclick="saveToken()" style="flex:1">保存 Token</button>
+      <button class="btn btn-ghost" onclick="alert('需要 Token 才能使用後台')" style="flex:1">稍後</button>
     </div>
   </div>
 </div>
@@ -176,33 +178,104 @@ pre{background:var(--bg);border-radius:8px;padding:0.875rem;font-size:0.75rem;ov
 <div class="toast" id="toast"></div>
 
 <script>
-let articles = JSON.parse(localStorage.getItem('blog_articles') || '[]');
+let articles = [];
 let editingId = null;
+let token = localStorage.getItem('gh_token') || '';
+const owner = 'mandychen111111-commits';
+const repo = 'brand-blog';
 
 function today(){const d=new Date();return d.toISOString().split('T')[0]}
 
+function saveToken(){
+  const t = document.getElementById('tokenInput').value.trim();
+  if(!t){showToast('請輸入 Token');return}
+  localStorage.setItem('gh_token', t);
+  token = t;
+  document.getElementById('setupModal').classList.add('hidden');
+  loadArticles();
+  showToast('Token 已保存！');
+}
+
+async function loadArticles(){
+  if(!token){
+    document.getElementById('setupModal').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('setupModal').classList.add('hidden');
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
+      headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3.raw'}
+    });
+    if(!res.ok) throw new Error('讀取失敗');
+    articles = await res.json();
+    updateSyncStatus(true);
+  } catch(e) {
+    articles = [];
+    updateSyncStatus(false);
+    showToast('連接失敗');
+  }
+  renderList();
+}
+
+function updateSyncStatus(ok){
+  const el = document.getElementById('syncStatus');
+  if(ok){
+    el.innerHTML = '<span class="status-dot"></span>已連接';
+  } else {
+    el.innerHTML = '<span class="status-dot error"></span>未連接';
+  }
+}
+
+async function saveToGithub(){
+  if(!token) return false;
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(articles, null, 2))));
+  
+  try {
+    const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
+      headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json'}
+    });
+    if(!getRes.ok) throw new Error('無法取得檔案');
+    const data = await getRes.json();
+    const sha = data.sha;
+
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({message: '更新文章', content: content, sha: sha})
+    });
+    if(!res.ok) throw new Error('上傳失敗');
+    showToast('✅ 已發布到網站！');
+    return true;
+  } catch(e) {
+    showToast('❌ 發布失敗：' + e.message);
+    return false;
+  }
+}
+
 function renderList(){
   const el = document.getElementById('articleList');
+  if(!token){
+    el.innerHTML = '<div class="empty-msg">請先設定 Token</div>';
+    return;
+  }
   if(articles.length === 0){
-    el.innerHTML = '<div class="empty-msg">還沒有文章，點「新增文章」開始吧！</div>';
+    el.innerHTML = '<div class="empty-msg">還沒有文章</div>';
   } else {
     el.innerHTML = '<div class="article-list">' + articles.map(a => `
       <div class="article-item ${editingId===a.id?'selected':''}" onclick="editArticle('${a.id}')">
-        <div style="flex:1;min-width:0">
+        <div style="flex:1">
           <div class="article-item-title">${a.title||'（無標題）'}</div>
-          <div class="article-item-meta">${a.date||''} &nbsp;·&nbsp; <span class="status-badge status-${a.status}">${a.status==='published'?'已發布':'草稿'}</span></div>
+          <div class="article-item-meta">${a.date||''} · <span class="status-badge status-${a.status}">${a.status==='published'?'已發布':'草稿'}</span></div>
         </div>
         <div class="article-item-actions">
-          <button class="icon-btn icon-btn-edit" onclick="event.stopPropagation();editArticle('${a.id}')" title="編輯">✏️</button>
-          <button class="icon-btn icon-btn-del" onclick="event.stopPropagation();deleteArticle('${a.id}')" title="刪除">🗑</button>
+          <button class="icon-btn icon-btn-edit" onclick="event.stopPropagation();editArticle('${a.id}')">✏️</button>
+          <button class="icon-btn icon-btn-del" onclick="event.stopPropagation();deleteArticle('${a.id}')">🗑</button>
         </div>
       </div>`).join('') + '</div>';
   }
-  updateJson();
-}
-
-function updateJson(){
-  document.getElementById('jsonPreview').textContent = JSON.stringify(articles, null, 2);
 }
 
 function newArticle(){
@@ -215,7 +288,7 @@ function newArticle(){
   document.getElementById('editTags').value = '';
   document.getElementById('editCover').value = '';
   document.getElementById('editDate').value = today();
-  document.getElementById('editStatus').value = 'draft';
+  document.getElementById('editStatus').value = 'published';
   renderList();
 }
 
@@ -231,13 +304,18 @@ function editArticle(id){
   document.getElementById('editTags').value = (a.tags||[]).join(', ');
   document.getElementById('editCover').value = a.cover||'';
   document.getElementById('editDate').value = a.date||today();
-  document.getElementById('editStatus').value = a.status||'draft';
+  document.getElementById('editStatus').value = a.status||'published';
   renderList();
 }
 
-function saveArticle(){
+async function saveArticle(){
   const title = document.getElementById('editTitle').value.trim();
-  if(!title){showToast('請輸入文章標題');return}
+  if(!title){showToast('請輸入標題');return}
+  
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 發布中...';
+
   const tagsRaw = document.getElementById('editTags').value;
   const tags = tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [];
   const data = {
@@ -250,25 +328,30 @@ function saveArticle(){
     date: document.getElementById('editDate').value,
     status: document.getElementById('editStatus').value
   };
+  
   if(editingId){
     const idx = articles.findIndex(a=>a.id===editingId);
     if(idx>=0) articles[idx]=data;
   } else {
     articles.unshift(data);
-    editingId = data.id;
   }
-  localStorage.setItem('blog_articles', JSON.stringify(articles));
-  renderList();
-  showToast('文章已儲存！記得下載 JSON 更新網站');
+
+  const ok = await saveToGithub();
+  if(ok){
+    editingId = null;
+    renderList();
+  }
+  
+  btn.disabled = false;
+  btn.innerHTML = '儲存並發布';
 }
 
-function deleteArticle(id){
-  if(!confirm('確定要刪除這篇文章嗎？')) return;
+async function deleteArticle(id){
+  if(!confirm('確定刪除？')) return;
   articles = articles.filter(a=>a.id!==id);
-  if(editingId===id){editingId=null}
-  localStorage.setItem('blog_articles', JSON.stringify(articles));
-  renderList();
-  showToast('文章已刪除');
+  if(editingId===id) editingId=null;
+  const ok = await saveToGithub();
+  if(ok) renderList();
 }
 
 function closeEditor(){
@@ -280,29 +363,15 @@ function insertTag(type){
   const ta = document.getElementById('editContent');
   const pos = ta.selectionStart;
   let insert='';
-  if(type==='h2') insert='<h2>標題文字</h2>\n';
+  if(type==='h2') insert='<h2>標題</h2>\n';
   else if(type==='h3') insert='<h3>小標題</h3>\n';
-  else if(type==='p') insert='<p>段落文字</p>\n';
-  else if(type==='strong') insert='<strong>粗體文字</strong>';
-  else if(type==='ul-li') insert='<ul>\n  <li>項目一</li>\n  <li>項目二</li>\n</ul>\n';
-  else if(type==='blockquote') insert='<blockquote>引用文字</blockquote>\n';
+  else if(type==='p') insert='<p>段落</p>\n';
+  else if(type==='strong') insert='<strong>粗體</strong>';
+  else if(type==='ul-li') insert='<ul>\n<li>項目</li>\n</ul>\n';
+  else if(type==='blockquote') insert='<blockquote>引用</blockquote>\n';
   ta.value = ta.value.slice(0,pos) + insert + ta.value.slice(pos);
   ta.focus();
   ta.selectionStart = ta.selectionEnd = pos + insert.length;
-}
-
-function copyJson(){
-  navigator.clipboard.writeText(JSON.stringify(articles,null,2));
-  showToast('JSON 已複製到剪貼簿！');
-}
-
-function downloadJson(){
-  const blob = new Blob([JSON.stringify(articles,null,2)],{type:'application/json'});
-  const a = document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='articles.json';
-  a.click();
-  showToast('articles.json 已下載！');
 }
 
 function showToast(msg){
@@ -312,7 +381,7 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-renderList();
+loadArticles();
 newArticle();
 </script>
 </body>
