@@ -189,16 +189,33 @@ async function saveToGithub(){
     const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
       headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json'}
     });
+    
+    if(!getRes.ok) {
+      const err = await getRes.json();
+      throw new Error(err.message || `無法讀取檔案 (${getRes.status})`);
+    }
+    
     const data = await getRes.json();
+    if(!data.sha) throw new Error('無法取得 SHA');
+
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
       method: 'PUT',
       headers: {'Authorization': `token ${token}`, 'Content-Type': 'application/json'},
       body: JSON.stringify({message: '更新文章', content, sha: data.sha})
     });
-    if(res.ok){showToast('✓ 已發布');return true}
-  } catch(e) {}
-  showToast('✗ 發布失敗');
-  return false;
+    
+    if(res.ok) {
+      showToast('✓ 已發布');
+      return true;
+    }
+    
+    const errData = await res.json();
+    throw new Error(errData.message || `發布失敗 (${res.status})`);
+  } catch(e) {
+    console.error(e);
+    showToast('✗ ' + e.message);
+    return false;
+  }
 }
 
 function renderList(){
