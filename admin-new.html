@@ -248,16 +248,29 @@ async function saveToGithub(){
   
   try {
     const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
-      headers: {'Authorization': `token ${token}`}
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
     });
+    
+    if(!getRes.ok){
+      throw new Error(`無法取得檔案 (${getRes.status})`);
+    }
+    
     const data = await getRes.json();
     const sha = data.sha;
+    
+    if(!sha){
+      throw new Error('無法取得檔案資訊');
+    }
 
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
       method: 'PUT',
       headers: {
         'Authorization': `token ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
       },
       body: JSON.stringify({
         message: '更新文章',
@@ -265,11 +278,17 @@ async function saveToGithub(){
         sha: sha
       })
     });
-    if(!res.ok) throw new Error('上傳失敗');
-    showToast('已發布到網站！');
+    
+    if(!res.ok){
+      const errData = await res.json();
+      throw new Error(errData.message || '上傳失敗');
+    }
+    
+    showToast('✅ 已發布到網站！');
     return true;
   } catch(e) {
-    showToast('發布失敗：' + e.message);
+    console.error('GitHub API Error:', e);
+    showToast('❌ 發布失敗：' + e.message);
     return false;
   }
 }
