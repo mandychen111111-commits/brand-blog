@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#F5F4F0;--surface:#FFFFFF;--text:#1A1A18;--muted:#6B6B66;--accent:#1D9E75;--accent-light:#E1F5EE;--border:#E8E6E0;--danger:#E24B4A;--danger-light:#FCEBEB;--info:#378ADD}
+:root{--bg:#F5F4F0;--surface:#FFFFFF;--text:#1A1A18;--muted:#6B6B66;--accent:#1D9E75;--accent-light:#E1F5EE;--border:#E8E6E0;--danger:#E24B4A;--danger-light:#FCEBEB}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100vh}
 a{text-decoration:none;color:inherit}
 
@@ -17,8 +17,8 @@ nav{background:var(--text);color:#fff;position:sticky;top:0;z-index:100}
 .logo span{color:#9FE1CB}
 .nav-right{display:flex;align-items:center;gap:1rem;font-size:0.85rem}
 .view-btn{color:#9FE1CB;display:flex;align-items:center;gap:0.375rem}
-.status-indicator{width:8px;height:8px;border-radius:50%;background:#9FE1CB;display:inline-block;margin-right:0.5rem}
-.status-indicator.disconnected{background:#E24B4A}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#9FE1CB;display:inline-block;margin-right:0.5rem}
+.status-dot.error{background:#E24B4A}
 
 .layout{max-width:1200px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 380px;gap:1.5rem}
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
@@ -55,21 +55,23 @@ nav{background:var(--text);color:#fff;position:sticky;top:0;z-index:100}
 .form-body{padding:1.5rem}
 .form-row{margin-bottom:1.25rem}
 label{display:block;font-size:0.8rem;font-weight:500;color:var(--muted);margin-bottom:0.5rem}
-input[type=text],input[type=date],select,textarea{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:'Noto Sans TC',sans-serif;font-size:0.875rem;color:var(--text);background:var(--surface);outline:none;transition:border 0.2s}
+input[type=text],input[type=date],input[type=password],select,textarea{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:'Noto Sans TC',sans-serif;font-size:0.875rem;color:var(--text);background:var(--surface);outline:none;transition:border 0.2s}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 textarea{resize:vertical;line-height:1.7}
 .form-actions{display:flex;gap:0.75rem;flex-wrap:wrap;padding-top:0.5rem}
 .toolbar{display:flex;gap:0.5rem;margin-bottom:0.5rem;flex-wrap:wrap}
 .toolbar-btn{padding:0.3rem 0.75rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);font-size:0.8rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s}
 .toolbar-btn:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
-.helper{font-size:0.75rem;color:var(--muted);margin-top:0.375rem}
 
-.setup-panel{padding:1.5rem}
-.setup-title{font-size:0.875rem;font-weight:600;margin-bottom:1rem}
-.setup-input{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:monospace;font-size:0.8rem;color:var(--text);background:var(--surface);outline:none;margin-bottom:0.75rem}
-.setup-input:focus{border-color:var(--accent)}
-.setup-hint{font-size:0.75rem;color:var(--muted);margin-bottom:1rem;line-height:1.6}
-.setup-actions{display:flex;gap:0.5rem}
+.setup-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.setup-modal.hidden{display:none}
+.setup-card{background:var(--surface);border-radius:16px;padding:2rem;max-width:420px;width:90%}
+.setup-card h2{font-family:'Noto Serif TC',serif;font-size:1.25rem;margin-bottom:1.5rem;color:var(--text)}
+.setup-card label{display:block;font-size:0.8rem;font-weight:500;color:var(--muted);margin-bottom:0.5rem}
+.setup-card input{width:100%;padding:0.65rem 1rem;border:1px solid var(--border);border-radius:10px;font-family:monospace;font-size:0.8rem;margin-bottom:1rem;outline:none}
+.setup-card input:focus{border-color:var(--accent)}
+.setup-hint{font-size:0.75rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.setup-actions{display:flex;gap:0.75rem}
 
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--text);color:#fff;padding:0.75rem 1.25rem;border-radius:100px;font-size:0.85rem;font-weight:500;transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:999}
 .toast.show{transform:translateY(0);opacity:1}
@@ -84,7 +86,7 @@ textarea{resize:vertical;line-height:1.7}
   <div class="nav-inner">
     <div class="logo">品牌<span>·</span>部落格 <span style="opacity:0.4;margin:0 0.5rem">|</span> 後台管理</div>
     <div class="nav-right">
-      <span id="syncStatus"><span class="status-indicator"></span>已連接</span>
+      <span id="syncStatus"><span class="status-dot"></span>已連接</span>
       <a href="index.html" class="view-btn">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         查看網站
@@ -95,29 +97,10 @@ textarea{resize:vertical;line-height:1.7}
 
 <div class="layout">
   <div>
-    <div class="panel" id="setupPanel">
-      <div class="panel-header">
-        <div class="panel-title"><div class="dot" style="background:#FAC775"></div>GitHub 設定</div>
-      </div>
-      <div class="setup-panel">
-        <p class="setup-title">⚙️ 首次設定（只需一次）</p>
-        <label>GitHub Token</label>
-        <input type="password" id="tokenInput" class="setup-input" placeholder="輸入你的 GitHub Personal Access Token">
-        <div class="setup-hint">
-          💡 從 GitHub Settings → Developer settings → Personal access tokens → Tokens (classic) 建立<br>
-          只需勾選 <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px">repo</code> 權限
-        </div>
-        <div class="setup-actions">
-          <button class="btn btn-primary" onclick="saveToken()">保存 Token</button>
-          <button class="btn btn-ghost" onclick="clearToken()">清除</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-top:1.5rem">
+    <div class="panel">
       <div class="panel-header">
         <div class="panel-title"><div class="dot"></div>所有文章</div>
-        <button class="btn btn-primary" id="newBtn" onclick="newArticle()">+ 新增文章</button>
+        <button class="btn btn-primary" onclick="newArticle()">+ 新增文章</button>
       </div>
       <div id="articleList"></div>
     </div>
@@ -139,7 +122,7 @@ textarea{resize:vertical;line-height:1.7}
         <textarea id="editExcerpt" rows="2" placeholder="顯示在列表頁的簡短描述"></textarea>
       </div>
       <div class="form-row">
-        <label>文章內容（支援 HTML 標籤）</label>
+        <label>文章內容</label>
         <div class="toolbar">
           <button class="toolbar-btn" onclick="insertTag('h2')">H2 標題</button>
           <button class="toolbar-btn" onclick="insertTag('h3')">H3 標題</button>
@@ -152,7 +135,7 @@ textarea{resize:vertical;line-height:1.7}
       </div>
       <div class="form-row">
         <label>標籤（用逗號分隔）</label>
-        <input type="text" id="editTags" placeholder="例如：產品介紹, 使用心得, 健康知識">
+        <input type="text" id="editTags" placeholder="例如：產品介紹, 使用心得">
       </div>
       <div class="form-row">
         <label>封面圖片網址</label>
@@ -177,6 +160,21 @@ textarea{resize:vertical;line-height:1.7}
   </div>
 </div>
 
+<div id="setupModal" class="setup-modal">
+  <div class="setup-card">
+    <h2>⚙️ 設定 GitHub Token</h2>
+    <label>GitHub Personal Access Token</label>
+    <input type="password" id="tokenInput" placeholder="ghp_...">
+    <div class="setup-hint">
+      從 GitHub Settings → Developer settings → Personal access tokens → Tokens (classic) 建立，只需勾選 <code style="background:#f0f0f0;padding:2px 6px">repo</code> 權限
+    </div>
+    <div class="setup-actions">
+      <button class="btn btn-primary" onclick="saveToken()" style="flex:1">保存 Token</button>
+      <button class="btn btn-ghost" onclick="alert('需要 Token 才能使用後台')" style="flex:1">稍後</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -193,28 +191,17 @@ function saveToken(){
   if(!t){showToast('請輸入 Token');return}
   localStorage.setItem('gh_token', t);
   token = t;
-  document.getElementById('tokenInput').value = '';
-  document.getElementById('setupPanel').style.display = 'none';
-  showToast('Token 已保存！');
+  document.getElementById('setupModal').classList.add('hidden');
   loadArticles();
-}
-
-function clearToken(){
-  if(!confirm('確定要清除 Token 嗎？')) return;
-  localStorage.removeItem('gh_token');
-  token = '';
-  document.getElementById('setupPanel').style.display = 'block';
-  articles = [];
-  renderList();
-  showToast('Token 已清除');
+  showToast('Token 已保存！');
 }
 
 async function loadArticles(){
   if(!token){
-    document.getElementById('setupPanel').style.display = 'block';
+    document.getElementById('setupModal').classList.remove('hidden');
     return;
   }
-  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('setupModal').classList.add('hidden');
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
       headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3.raw'}
@@ -225,7 +212,7 @@ async function loadArticles(){
   } catch(e) {
     articles = [];
     updateSyncStatus(false);
-    showToast('連接失敗，請檢查 Token');
+    showToast('連接失敗');
   }
   renderList();
 }
@@ -233,61 +220,36 @@ async function loadArticles(){
 function updateSyncStatus(ok){
   const el = document.getElementById('syncStatus');
   if(ok){
-    el.innerHTML = '<span class="status-indicator"></span>已連接';
+    el.innerHTML = '<span class="status-dot"></span>已連接';
   } else {
-    el.innerHTML = '<span class="status-indicator disconnected"></span>未連接';
+    el.innerHTML = '<span class="status-dot error"></span>未連接';
   }
 }
 
 async function saveToGithub(){
-  if(!token){
-    showToast('請先設定 Token');
-    return false;
-  }
+  if(!token) return false;
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(articles, null, 2))));
   
   try {
     const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
-      headers: {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
+      headers: {'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json'}
     });
-    
-    if(!getRes.ok){
-      throw new Error(`無法取得檔案 (${getRes.status})`);
-    }
-    
+    if(!getRes.ok) throw new Error('無法取得檔案');
     const data = await getRes.json();
     const sha = data.sha;
-    
-    if(!sha){
-      throw new Error('無法取得檔案資訊');
-    }
 
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/articles.json`, {
       method: 'PUT',
       headers: {
         'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        message: '更新文章',
-        content: content,
-        sha: sha
-      })
+      body: JSON.stringify({message: '更新文章', content: content, sha: sha})
     });
-    
-    if(!res.ok){
-      const errData = await res.json();
-      throw new Error(errData.message || '上傳失敗');
-    }
-    
+    if(!res.ok) throw new Error('上傳失敗');
     showToast('✅ 已發布到網站！');
     return true;
   } catch(e) {
-    console.error('GitHub API Error:', e);
     showToast('❌ 發布失敗：' + e.message);
     return false;
   }
@@ -296,21 +258,21 @@ async function saveToGithub(){
 function renderList(){
   const el = document.getElementById('articleList');
   if(!token){
-    el.innerHTML = '<div class="empty-msg">請先設定 GitHub Token</div>';
+    el.innerHTML = '<div class="empty-msg">請先設定 Token</div>';
     return;
   }
   if(articles.length === 0){
-    el.innerHTML = '<div class="empty-msg">還沒有文章，點「新增文章」開始吧！</div>';
+    el.innerHTML = '<div class="empty-msg">還沒有文章</div>';
   } else {
     el.innerHTML = '<div class="article-list">' + articles.map(a => `
       <div class="article-item ${editingId===a.id?'selected':''}" onclick="editArticle('${a.id}')">
-        <div style="flex:1;min-width:0">
+        <div style="flex:1">
           <div class="article-item-title">${a.title||'（無標題）'}</div>
-          <div class="article-item-meta">${a.date||''} &nbsp;·&nbsp; <span class="status-badge status-${a.status}">${a.status==='published'?'已發布':'草稿'}</span></div>
+          <div class="article-item-meta">${a.date||''} · <span class="status-badge status-${a.status}">${a.status==='published'?'已發布':'草稿'}</span></div>
         </div>
         <div class="article-item-actions">
-          <button class="icon-btn icon-btn-edit" onclick="event.stopPropagation();editArticle('${a.id}')" title="編輯">✏️</button>
-          <button class="icon-btn icon-btn-del" onclick="event.stopPropagation();deleteArticle('${a.id}')" title="刪除">🗑</button>
+          <button class="icon-btn icon-btn-edit" onclick="event.stopPropagation();editArticle('${a.id}')">✏️</button>
+          <button class="icon-btn icon-btn-del" onclick="event.stopPropagation();deleteArticle('${a.id}')">🗑</button>
         </div>
       </div>`).join('') + '</div>';
   }
@@ -348,7 +310,7 @@ function editArticle(id){
 
 async function saveArticle(){
   const title = document.getElementById('editTitle').value.trim();
-  if(!title){showToast('請輸入文章標題');return}
+  if(!title){showToast('請輸入標題');return}
   
   const btn = document.getElementById('saveBtn');
   btn.disabled = true;
@@ -385,7 +347,7 @@ async function saveArticle(){
 }
 
 async function deleteArticle(id){
-  if(!confirm('確定要刪除這篇文章嗎？')) return;
+  if(!confirm('確定刪除？')) return;
   articles = articles.filter(a=>a.id!==id);
   if(editingId===id) editingId=null;
   const ok = await saveToGithub();
@@ -401,12 +363,12 @@ function insertTag(type){
   const ta = document.getElementById('editContent');
   const pos = ta.selectionStart;
   let insert='';
-  if(type==='h2') insert='<h2>標題文字</h2>\n';
+  if(type==='h2') insert='<h2>標題</h2>\n';
   else if(type==='h3') insert='<h3>小標題</h3>\n';
-  else if(type==='p') insert='<p>段落文字</p>\n';
-  else if(type==='strong') insert='<strong>粗體文字</strong>';
-  else if(type==='ul-li') insert='<ul>\n  <li>項目一</li>\n  <li>項目二</li>\n</ul>\n';
-  else if(type==='blockquote') insert='<blockquote>引用文字</blockquote>\n';
+  else if(type==='p') insert='<p>段落</p>\n';
+  else if(type==='strong') insert='<strong>粗體</strong>';
+  else if(type==='ul-li') insert='<ul>\n<li>項目</li>\n</ul>\n';
+  else if(type==='blockquote') insert='<blockquote>引用</blockquote>\n';
   ta.value = ta.value.slice(0,pos) + insert + ta.value.slice(pos);
   ta.focus();
   ta.selectionStart = ta.selectionEnd = pos + insert.length;
